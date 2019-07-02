@@ -49,14 +49,14 @@ class Cart extends Component {
     return (
       <div className="p-2">
         <div className="container" style={{ backgroundColor: "#f5f5f5" }}>
-          {this.state.counters.map(counter => (
+          {this.state.counters.map((counter, i) => (
             <CartItem
               key={counter.id}
               counter={counter}
               onDelete={this.handleDelete}
               onChange={this.handleChange}
             >
-              {counter.id}.&nbsp;
+              {i + 1}.&nbsp;
             </CartItem>
           ))}
           <div
