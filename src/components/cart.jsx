@@ -1,22 +1,26 @@
 import React, { Component } from "react";
 import CartItem from "./cartItem";
+import CartTotal from "./cartTotal";
+import EmptyCart from "./emptyCart";
 
 class Cart extends Component {
   // state = {
-  //   counters: []
+  //   showEmptyMessage: false
   // };
   constructor() {
     super();
     this.state = {
-      counters: this.getInitialState()
+      items: this.getItems(),
+      showEmptyMessage: false
     };
   }
   handleUndo = () => {
     this.setState({
-      counters: this.getInitialState()
+      items: this.getItems(),
+      showEmptyMessage: false
     });
   };
-  getInitialState = () => {
+  getItems = () => {
     return [
       { id: 1, value: 1, product: "Shampoo", price: 3.78 },
       { id: 2, value: 1, product: "Jack Daniels Whiskey .75", price: 24.3 },
@@ -28,53 +32,40 @@ class Cart extends Component {
     if (
       window.confirm(
         "Are you sure you want to delete '" +
-          this.state.counters.filter(x => x.id === counterId)[0].product +
+          this.state.items.filter(x => x.id === counterId)[0].product +
           "'?"
       )
     ) {
       this.setState({
-        counters: this.state.counters.filter(x => x.id !== counterId)
+        items: this.state.items.filter(x => x.id !== counterId),
+        showEmptyMessage: this.state.items.length - 1 <= 0
       });
     }
   };
   handleChange = (counterId, count) => {
-    let tempCounters = this.state.counters.slice();
-    tempCounters.filter(x => x.id === counterId)[0].value =
-      count > 0 ? count : 0;
+    let newItems = this.state.items.slice();
+    newItems.filter(x => x.id === counterId)[0].value = count > 0 ? count : 0;
     this.setState({
-      counters: tempCounters
+      items: newItems,
+      showEmptyMessage: newItems.reduce((a, b) => a + b.value, 0) === 0
     });
   };
   render() {
     return (
       <div className="p-2">
         <div className="container" style={{ backgroundColor: "#f5f5f5" }}>
-          {this.state.counters.map((counter, i) => (
+          <EmptyCart showMessage={this.state.showEmptyMessage} />
+          {this.state.items.map((item, i) => (
             <CartItem
-              key={counter.id}
-              counter={counter}
+              key={item.id}
+              item={item}
               onDelete={this.handleDelete}
               onChange={this.handleChange}
             >
               {i + 1}.&nbsp;
             </CartItem>
           ))}
-          <div
-            className="badge badge-info float-right m-2 p-2"
-            style={{ borderRadius: "0px" }}
-          >
-            Total: $
-            {this.state.counters
-              .reduce((a, b) => a + b.value * b.price, 0)
-              .toFixed(2)}
-          </div>
-          <button
-            className="btn btn-warning foat-left m-2"
-            onClick={this.handleUndo}
-            title="Reload"
-          >
-            <i className="fa fa-undo" />
-          </button>
+          <CartTotal items={this.state.items} onUndo={this.handleUndo} />
         </div>
       </div>
     );

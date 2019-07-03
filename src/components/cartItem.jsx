@@ -7,7 +7,7 @@ class CartItem extends Component {
         <div className="col-sm-4" style={{ verticalAlign: "center" }}>
           <div className="m-2">
             {this.props.children}
-            {this.props.counter.product}
+            {this.props.item.product}
           </div>
         </div>
         <div className="col-sm-2">
@@ -16,15 +16,15 @@ class CartItem extends Component {
             className="badge badge-info p-2"
             style={{ borderRadius: "0px" }}
           >
-            $ {(this.props.counter.price * this.props.counter.value).toFixed(2)}
+            $ {(this.props.item.price * this.props.item.value).toFixed(2)}
           </span>
         </div>
         <div className="col">
           <button
             onClick={() => {
               this.props.onChange(
-                this.props.counter.id,
-                this.props.counter.value + 1
+                this.props.item.id,
+                this.props.item.value + 1
               );
             }}
             className="btn btn-sm btn-secondary m-2"
@@ -34,8 +34,8 @@ class CartItem extends Component {
           <button
             onClick={() => {
               this.props.onChange(
-                this.props.counter.id,
-                this.props.counter.value - 1
+                this.props.item.id,
+                this.props.item.value - 1
               );
             }}
             className="btn btn-sm btn-secondary"
@@ -43,7 +43,7 @@ class CartItem extends Component {
             <i className="fa fa-minus-circle" />
           </button>
           <button
-            onClick={() => this.props.onDelete(this.props.counter.id)}
+            onClick={() => this.props.onDelete(this.props.item.id)}
             className="btn btn-sm btn-danger m-2"
           >
             <i className="fa fa-trash" />
@@ -55,12 +55,12 @@ class CartItem extends Component {
 
   getBadgeClasses() {
     let classes = "badge m-2 p-2 badge-";
-    classes += this.props.counter.value === 0 ? "warning" : "primary";
+    classes += this.props.item.value === 0 ? "warning" : "primary";
     return classes;
   }
 
   formatCount() {
-    const count = this.props.counter.value;
+    const count = this.props.item.value;
     return count === 0 ? "None" : count;
   }
 }
